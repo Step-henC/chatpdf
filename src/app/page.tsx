@@ -3,6 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import {LogIn} from 'lucide-react'
+import FileUpload from "@/components/FileUpload";
 
 //marked async for server component
 // html generated on server and sent to client
@@ -22,7 +23,7 @@ export default async function Home() {
     </div >
     <p className="max-w-xl mt-1 text-lg text-slate-600">Join millions of professionals to instantly answer questions and understand PDF's with AI</p>
     <div className="w-full mt-4">
-      {isAuth ? <h1>file upload</h1> : 
+      {isAuth ? <FileUpload /> : 
       <Link href='/sign-in'>
         <Button>Login to get Started!
           <LogIn className="w-4 h-4 ml-2"/>
