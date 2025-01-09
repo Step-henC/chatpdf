@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-import Image from "next/image";
+import Link from "next/link";
+import {LogIn} from 'lucide-react'
 
 //marked async for server component
 // html generated on server and sent to client
@@ -20,6 +21,14 @@ export default async function Home() {
      {isAuth&&  <Button>Go to Chats</Button>}
     </div >
     <p className="max-w-xl mt-1 text-lg text-slate-600">Join millions of professionals to instantly answer questions and understand PDF's with AI</p>
+    <div className="w-full mt-4">
+      {isAuth ? <h1>file upload</h1> : 
+      <Link href='/sign-in'>
+        <Button>Login to get Started!
+          <LogIn className="w-4 h-4 ml-2"/>
+        </Button>
+      </Link>}
+    </div>
   </div>
   </div>
 </div>
