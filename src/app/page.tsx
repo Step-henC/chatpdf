@@ -21,7 +21,7 @@ export default async function Home() {
     <div className="flex mt-2">
      {isAuth&&  <Button>Go to Chats</Button>}
     </div >
-    <p className="max-w-xl mt-1 text-lg text-slate-600">Join millions of professionals to instantly answer questions and understand PDF's with AI</p>
+    <p className="max-w-xl mt-1 text-lg text-slate-600">Join millions of professionals that levarage AI to engage with their PDF's </p>
     <div className="w-full mt-4">
       {isAuth ? <FileUpload /> : 
       <Link href='/sign-in'>
