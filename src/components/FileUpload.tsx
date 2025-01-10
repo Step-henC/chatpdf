@@ -40,12 +40,11 @@ const FileUpload = () => {
                     return;
                 }
                 mutate(data, {
-                    onSuccess: (data) => toast.success("success!"),
+                    onSuccess: () => toast.success("success!"),
                     onError: () => toast.error("Error creating chat")
                 }) //send data to our api chat server
             } catch (error) {
                 toast.error("Cannot upload file")
-                console.log(error)
             } finally {
                 setUploading(false)
             }
