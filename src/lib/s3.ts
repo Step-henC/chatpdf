@@ -4,9 +4,9 @@ import AWS from 'aws-sdk'
 
 export async function uploadToS3(file: File) {
     try {
-        
+
         AWS.config.update({
-            credentials: { 
+            credentials: {
                 accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || "",
                 secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY || ""
             },
@@ -31,7 +31,7 @@ export async function uploadToS3(file: File) {
                 console.log("uploading to s3...", parseInt((evt.loaded*100/evt.total).toString()) + "%");
         }).promise()
 
-        await upload.then(data => {
+        await upload.then(() => {
             console.log("sucess uploaded to s3!", file_key)
         })
 

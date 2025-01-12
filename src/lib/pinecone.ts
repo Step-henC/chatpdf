@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import {Pinecone, PineconeRecord, } from '@pinecone-database/pinecone'
 import { downloadFromS3 } from './s3-server'
 import {PDFLoader} from "@langchain/community/document_loaders/fs/pdf"
@@ -5,22 +6,22 @@ import {PDFLoader} from "@langchain/community/document_loaders/fs/pdf"
 //Pinecone should have recursive text splitter but cannot find in docs
 // Pinecone docs show langchain as the text splitter, so going with that
 import { Document } from "langchain/document";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter"; 
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { getEmbeddings } from './embeddings';
-import md5 from 'md5';
-import {convertToASCII} from './utils'
+import  md5 from 'md5';
+//import {convertToASCII} from './utils'
 
 // npm i @types/md5
-let pinecone = new Pinecone({
+const pinecone = new Pinecone({
     apiKey: process.env.PINECONE_API_KEY || '',
-    maxRetries: 5,
 })
 
 
 type PDFPage = { // saw this when console logging result of PDFLoader
     pageContent: string,
     metadata: {
-        loc: {pageNumber: number}
+        loc: {pageNumber: number} //pinecone metadata object slightly different than Langchain textsplitter metadat
+                                    //TODO refactor by finding pinecone metadata for multipage pdf
     }
 }
 export async function loadS3IntoPinecone(fileKey: string){
@@ -36,6 +37,7 @@ export async function loadS3IntoPinecone(fileKey: string){
 
     //split pdf into smaller documents, like two or three sentances, for vectorizing
     const documents = await Promise.all(pages.map(prepareDocument))
+    console.log('DOCS', documents)
 
     // vectorize and embed individual docs
     const vectors = await Promise.all(documents.flat().map(embedDocuments))
@@ -45,7 +47,7 @@ export async function loadS3IntoPinecone(fileKey: string){
 
     console.debug("Inserting vectors into pinecone")
 
-    const namespace = convertToASCII(fileKey);
+    //const namespace = convertToASCII(fileKey);
 
     await index.upsert(vectors)
 
@@ -63,7 +65,7 @@ async function embedDocuments(doc: Document) {
         return {
             id: hash,
             values: embeddings,
-            metadata: doc.metadata
+            //metadata: doc.metadata
 
         } as PineconeRecord//as Vector type but not found in module
 
@@ -83,7 +85,7 @@ async function prepareDocument(page: PDFPage) {
     pageContent = pageContent.replace(/\n/g, '') // replace new line chars with nothing
 
     const splitter = new RecursiveCharacterTextSplitter()
-    const docs = await splitter.splitDocuments([new Document({pageContent, metadata})]);
+    const docs = await splitter.splitDocuments([new Document({pageContent})]); //left out metadata for now, see TODO above
 
     return docs;
 }

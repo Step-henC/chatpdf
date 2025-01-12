@@ -8,9 +8,10 @@ children: React.ReactNode
 }
 
 const queryClient = new QueryClient();
- const Provider = ({children}: Props) => {
+const Provider = ({children}: Props) => {
 
     return (
+        // eslint-disable-next-line react/no-children-prop
         <QueryClientProvider client={queryClient} children={children}>
 
         </QueryClientProvider>

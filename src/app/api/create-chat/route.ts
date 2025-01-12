@@ -1,14 +1,15 @@
 import { loadS3IntoPinecone } from "@/lib/pinecone";
 import { NextResponse } from "next/server"
-import {db } from '@/lib/db'
 import {chats} from '@/lib/db/schema'
 import { getS3Url } from "@/lib/s3";
-import {useAuth} from '@clerk/nextjs'
-
+import {auth} from '@clerk/nextjs/server'
+import { neon, neonConfig,  } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+neonConfig.fetchConnectionCache = true;
 // need @tanstack/react-query to send file_key to backend when we upload to S3
 //local to server queries
 export async function POST(req: Request, res: Response){
-    const {userId} = await useAuth();
+    const {userId} = await auth();
     if (!userId) {
         return NextResponse.json({error: "unauthorized"}, {status: 401})
     }
@@ -16,7 +17,7 @@ export async function POST(req: Request, res: Response){
     const body = await req.json()
     const {file_key, file_name} = body;
     await loadS3IntoPinecone(file_key);
-    const chat_id = await db.insert(chats).values({
+    const chat_id = await drizzle(neon(process.env.DATABASE_URL!)).insert(chats).values({
         fileKey: file_key,
         pdfName: file_name,
         pdfUrl: getS3Url(file_key),
