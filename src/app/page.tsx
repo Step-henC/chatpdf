@@ -19,11 +19,14 @@ export default async function Home() {
       <UserButton afterSwitchSessionUrl="/"/>
     </div>
     <div className="flex mt-2">
-     {isAuth&&  <Button>Go to Chats</Button>}
+     <>
+     {isAuth &&  <Button>Go to Chats</Button>}
+
+      </>
     </div >
     <p className="max-w-xl mt-1 text-lg text-slate-600">Join millions of professionals that levarage AI to engage with their PDF's </p>
     <div className="w-full mt-4">
-      {isAuth ? <FileUpload /> : 
+      {isAuth ? <FileUpload /> :
       <Link href='/sign-in'>
         <Button>Login to get Started!
           <LogIn className="w-4 h-4 ml-2"/>

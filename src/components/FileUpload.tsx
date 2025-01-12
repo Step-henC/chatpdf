@@ -8,8 +8,10 @@ import { Inbox, Loader2 } from 'lucide-react'
 import {useDropzone} from 'react-dropzone' //creates file upload/drop utility for us
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 const FileUpload = () => {
+    const router = useRouter()
     const [uploading, setUploading] = useState(false) //true when uploading to s3
     const {mutate, isPending} = useMutation({ //isLoading is true when uploading file to my backend api
         mutationFn: async ({file_key, file_name}: {file_key: string, file_name: string}) => {
@@ -40,11 +42,18 @@ const FileUpload = () => {
                     return;
                 }
                 mutate(data, {
-                    onSuccess: ({chat_id}) => {toast.success("success!")},
-                    onError: () => toast.error("Error creating chat")
+                    onSuccess: ({chat_id}) => {
+                        toast.success("Chat created");
+                        router.push(`/chat/${chat_id}`)
+
+                    },
+                    onError: (e) => {toast.error("Error creating chat")
+                        console.log(e)
+                    }
                 }) //send data to our api chat server
             } catch (error) {
                 toast.error("Cannot upload file")
+                console.log(error)
             } finally {
                 setUploading(false)
             }
@@ -64,7 +73,6 @@ const FileUpload = () => {
                 <Inbox className='w-10 h-10 text-blue-500'/>
                 <p className="mt-2 text-sm text-slate-400">Drop PDF Here</p>
                 </>)}
-              
             </div>
         </div>
     )
