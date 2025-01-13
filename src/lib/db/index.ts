@@ -3,13 +3,13 @@
 // Prisma at time of this was not compatible for Vercel Edge Servers
 
 "use server";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { drizzle, } from "drizzle-orm/neon-http";
 import { chats } from "./schema";
 import {eq} from 'drizzle-orm'
 import { getS3Url } from "../s3";
 
-neonConfig.fetchConnectionCache = true;
+
 
 if (!process.env.DATABASE_URL) {
     throw new Error("database url not found")
