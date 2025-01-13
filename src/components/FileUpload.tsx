@@ -6,7 +6,7 @@ import { uploadToS3 } from '@/lib/s3'
 import { useMutation } from '@tanstack/react-query'
 import { Inbox, Loader2 } from 'lucide-react'
 import {useDropzone} from 'react-dropzone' //creates file upload/drop utility for us
-import axios from 'axios'
+//import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 
@@ -15,10 +15,11 @@ const FileUpload = () => {
     const [uploading, setUploading] = useState(false) //true when uploading to s3
     const {mutate, isPending} = useMutation({ //isLoading is true when uploading file to my backend api
         mutationFn: async ({file_key, file_name}: {file_key: string, file_name: string}) => {
-            const response = await axios.post('/api/create-chat', {
-                        file_key, file_name
+            const response = await fetch('/api/create-chat', {
+                        method: "POST",
+                        body: JSON.stringify({file_key, file_name})
             })
-            return response.data;
+            return response.json();
         }
 })
     const {getRootProps, getInputProps} = useDropzone({
