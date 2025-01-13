@@ -14,8 +14,9 @@ type Props = {
 }
 
 
-const ChatPage = async ({params: {chatId}}: Props) => {
+const ChatPage = async ({params}: Props) => {
 
+    const {chatId} = await params; //console error saying I should wait for it
 
     const {userId} = await auth();
 

@@ -18,11 +18,6 @@ if (!process.env.DATABASE_URL) {
 const sql = neon(process.env.DATABASE_URL);
 
 const db = drizzle(sql)
-// export async function getData() {
-//     const sql = neon(process.env.DATABASE_URL!);
-//     const data = await sql`...`;
-//     return data;
-// }
 
 export async function findAllChatsByUserId(userId: string) {
     return await db.select().from(chats).where(eq(chats.userId, userId))

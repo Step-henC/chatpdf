@@ -8,7 +8,9 @@ import MessageComponent from "./MessageComponent";
 
 
 export default function ChatComponent(){
-    const {input, handleInputChange, handleSubmit, messages} = useChat()
+    const {input, handleInputChange, handleSubmit, messages} = useChat({
+        api: '/api/chat'
+    })
     
     return (
     <div className="relative max-h-screen overflow-scroll">
