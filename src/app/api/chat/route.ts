@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 import {Message, streamText} from 'ai'
 import {createOpenAI} from '@ai-sdk/openai'
 import { getContext } from '@/lib/context'
-import { getChatsByChatId } from '@/lib/db'
+import { getChatsByChatId, insertStreamIntoMessages } from '@/lib/db'
 
 const runtime = 'edge'
 
@@ -43,6 +43,7 @@ export async function POST(req: Request, res: Response) {
             AI assistant will not invent anything that is not drawn directly from the context.
             `
         }
+        let onStart = false;
         const stream = streamText({
             model: openai('gpt-3.5-turbo'),
             //messages: [prompt, ...messages.filter((message: Message) => message.role === 'user')],
@@ -50,7 +51,17 @@ export async function POST(req: Request, res: Response) {
             // https://github.com/vercel/ai/discussions/1869#discussioncomment-9692162
             messages: [...messages.filter((message: Message) => message.role === 'user')],
             system: prompt.content,
-           
+            // save user message so chat saved on page refresh //no onStart message yet
+            onChunk: async () => { 
+
+                if (!onStart) { //only save on first one
+                    await insertStreamIntoMessages(chatId, lastMessage.content)
+                }
+                onStart = true;
+            },
+            // save ai response so chat is saved on page refresh
+            onFinish: async (completion) => {await insertStreamIntoMessages(chatId, completion.text, 'system')}
+            
         })
 
         return stream.toDataStreamResponse();

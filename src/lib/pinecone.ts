@@ -38,7 +38,6 @@ export async function loadS3IntoPinecone(fileKey: string){
 
     // vectorize and embed individual docs
     const vectors = await Promise.all(documents.flat().map(embedDocuments))
-    console.log("VECTORS", vectors)
 
     //upload to pinecone
     const index = pinecone.Index('chatpdf')

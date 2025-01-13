@@ -12,6 +12,7 @@ export const chats = pgTable("chats", {
 })
 
 export type DrizzleChat = typeof chats.$inferSelect; //derive a type Chat
+export type DrizzleMessage = typeof messages.$inferSelect //derive message chat
 
 export const messages = pgTable("messages", {
     id: serial('id').notNull(),

@@ -5,7 +5,7 @@
 "use server";
 import { neon } from "@neondatabase/serverless";
 import { drizzle, } from "drizzle-orm/neon-http";
-import { chats } from "./schema";
+import { chats, messages, userSystemEnum} from "./schema";
 import {eq} from 'drizzle-orm'
 import { getS3Url } from "../s3";
 
@@ -39,4 +39,16 @@ export async function addOneChatToChats(file_key: string,
 
 export async function getChatsByChatId(chatId: number) {
     return await db.select().from(chats).where(eq(chats.id, chatId))
+}
+
+export async function insertStreamIntoMessages(chatId: number, content: string, role: any = 'user') {
+    return await db.insert(messages).values({ 
+        chatId,
+        content,
+        role
+    });
+}
+
+export async function getMessagesByChatId(chatId: any) {
+    return await db.select().from(messages).where(eq(chatId, messages.chatId))
 }
