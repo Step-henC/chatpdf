@@ -36,3 +36,7 @@ export async function addOneChatToChats(file_key: string,
             insertedId: chats.id
         })
 }
+
+export async function getChatsByChatId(chatId: number) {
+    return await db.select().from(chats).where(eq(chats.id, chatId))
+}
