@@ -5,7 +5,7 @@
 "use server";
 import { neon } from "@neondatabase/serverless";
 import { drizzle, } from "drizzle-orm/neon-http";
-import { chats, messages, userSystemEnum} from "./schema";
+import { chats, messages, user_subscription} from "./schema";
 import {eq} from 'drizzle-orm'
 import { getS3Url } from "../s3";
 
@@ -51,4 +51,27 @@ export async function insertStreamIntoMessages(chatId: number, content: string, 
 
 export async function getMessagesByChatId(chatId: any) {
     return await db.select().from(messages).where(eq(chatId, messages.chatId))
+}
+
+
+export async function getSubscribedUserById(userId: string){
+    return await db.select().from(user_subscription).where(eq(user_subscription.userId, userId))
+}
+
+export async function saveSubscription(userId: string, subscriptionId: string, customerId: string, priceId: string, periodEnd: Date) {
+    return await db.insert(user_subscription).values({
+        userId,
+        stripeCustomerId: customerId,
+        stripePriceId: priceId,
+        stripeCurrentPeriodEnd: periodEnd,
+        stripeSubscriptionId: subscriptionId
+    })
+}
+
+export async function updateStripeSubscription(priceId: string, periodEnd: Date, subscriptionId: string){
+    await db.update(user_subscription).set({
+        stripePriceId: priceId,
+        stripeCurrentPeriodEnd: periodEnd,
+    
+    }).where(eq(user_subscription.stripeSubscriptionId, subscriptionId))
 }

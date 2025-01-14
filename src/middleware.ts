@@ -1,6 +1,10 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 //clerk auth documentation lays out all this code
+// all routes are public by default by clerk and you must opt-in for protection
+// esp true of our stripe webhook
 export default clerkMiddleware();
+
+
 
 export const config = {
   matcher: [

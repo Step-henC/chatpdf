@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "./ui/button"
 import { MessageCircle, PlusCircleIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
 
 
 type Props = {
@@ -12,7 +13,22 @@ type Props = {
 }
 export default function ChatSidebar({chats, chatId}: Props) {
 
+    const [loading, setLoading] = useState(false)
 
+const handleSubscription = async () => {
+try {
+    setLoading(true)
+    const res = await fetch('/api/stripe', {
+        method: 'GET'
+    }).then((res) => res.json())
+
+   window.location.href = res?.url
+} catch(e) {
+    console.log(e)
+} finally {
+    setLoading(false)
+}
+}
 
     return (
     <div className="w-full h-screen p-4 text-gray-200 bg-gray-900">
@@ -41,8 +57,11 @@ export default function ChatSidebar({chats, chatId}: Props) {
                 <Link href={'/'}>Home</Link>
                 <Link href={'/'}>Source</Link>
                 {/**String btn */}
-
             </div>
+            <Button 
+            disabled={loading}
+            onClick={handleSubscription} 
+            className='mt-2 text-white bg-slate-700'>Upgrade to Pro</Button>
         </div>
     </div>
     )
