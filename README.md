@@ -1,6 +1,19 @@
+# Chat PDF 
+
+Upload a PDF and view contents while querying openai's chat-gpt for specific questions about your pdf.
+Used Pinecone db for vector embeddings 
+Stripe for payments
+Amazon S3 for pdf storage
+Clerk Auth for authentication
+NeonDB postgresSQL to store chats, user info and subscription info
+Drizzle for ORM
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
+
+### Prerequisites
+    - API Keys for : Stripe, AWS-sdk, PineconeDB, ClerkAuth, NeonDB
 
 First, run the development server:
 
